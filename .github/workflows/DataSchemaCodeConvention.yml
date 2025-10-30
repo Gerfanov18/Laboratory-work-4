@@ -15,7 +15,7 @@ jobs:
 
       - name: Validate JSON data schema
         run: |
-          if [ -f "DataSchema.json" ]; then
+          if [ -f "DataSchemaModified.json" ]; then
             echo "🔍 Checking JSON schema formatting..."
             python3 -m json.tool DataSchema.json > /dev/null && echo "✅ JSON schema format is valid"
           elif [ -f "DataSchema.sql" ]; then

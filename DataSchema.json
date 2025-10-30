@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Air Quality Monitoring for Sculptors",
+  "description": "Ієрархічна JSON-схема: скульптор → сенсор → рекомендації → навчальні матеріали → платежі",
+  "type": "object",
+  "properties": {
+    "sculptor": {
+      "type": "object",
+      "description": "Основний користувач системи (скульптор)",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Повне ім’я скульптора",
+          "minLength": 2,
+          "maxLength": 100,
+          "pattern": "^[A-Za-zА-Яа-яЇїІіЄє\\s]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Електронна адреса користувача для входу"
+        },
+        "access_level": {
+          "type": "string",
+          "description": "Рівень доступу користувача",
+          "enum": ["basic", "premium"]
+        },
+        "aqmesh": {
+          "type": "object",
+          "description": "Дані з сенсора якості повітря",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "Розташування сенсора",
+              "minLength": 2
+            },
+            "pollution_level": {
+              "type": "number",
+              "description": "Рівень забруднення повітря (AQI)",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "temperature": {
+              "type": "number",
+              "description": "Температура повітря в °C",
+              "minimum": -50,
+              "maximum": 60
+            }
+          },
+          "required": ["location", "pollution_level"]
+        },
+        "recommendations": {
+          "type": "array",
+          "description": "Масив рекомендацій для користувача",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Текст рекомендації",
+                "minLength": 5
+              },
+              "risk_level": {
+                "type": "string",
+                "description": "Рівень ризику для здоров’я",
+                "enum": ["low", "medium", "high"]
+              },
+              "medscape_source": {
+                "type": "object",
+                "description": "Медичне джерело інформації (Medscape API)",
+                "properties": {
+                  "api_key": {
+                    "type": "string",
+                    "description": "Ключ доступу до API",
+                    "minLength": 10
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "URL-адреса API Medscape"
+                  },
+                  "data_type": {
+                    "type": "string",
+                    "description": "Тип отриманих даних",
+                    "enum": ["json", "xml", "text"]
+                  }
+                },
+                "required": ["api_key", "url", "data_type"]
+              }
+            },
+            "required": ["text", "risk_level"]
+          }
+        },
+        "learning_materials": {
+          "type": "array",
+          "description": "Матеріали для навчання скульптора",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Назва матеріалу",
+                "minLength": 2
+              },
+              "type": {
+                "type": "string",
+                "description": "Тип матеріалу",
+                "enum": ["video", "pdf", "article"]
+              },
+              "access_type": {
+                "type": "string",
+                "description": "Тип доступу",
+                "enum": ["free", "premium"]
+              }
+            },
+            "required": ["title", "type", "access_type"]
+          }
+        },
+        "payments": {
+          "type": "array",
+          "description": "Історія платежів користувача",
+          "items": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "Сума оплати",
+                "minimum": 0.01
+              },
+              "date": {
+                "type": "string",
+                "format": "date",
+                "description": "Дата транзакції"
+              },
+              "status": {
+                "type": "string",
+                "description": "Статус платежу",
+                "enum": ["pending", "completed", "failed"]
+              },
+              "paypal_info": {
+                "type": "object",
+                "description": "Інформація про PayPal API",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Токен автентифікації"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Електронна адреса PayPal"
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "Стан з’єднання",
+                    "enum": ["active", "inactive"]
+                  }
+                },
+                "required": ["token", "email", "status"]
+              }
+            },
+            "required": ["amount", "date", "status"]
+          }
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "access_level",
+        "aqmesh",
+        "recommendations",
+        "learning_materials"
+      ]
+    }
+  },
+  "required": ["sculptor"]
+}

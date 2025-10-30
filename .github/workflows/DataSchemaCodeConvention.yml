@@ -1,0 +1,27 @@
+name: Data Schema Code Convention Check
+
+on:
+  push:
+    branches:
+      - main
+      - laboratory-work-4
+
+jobs:
+  check_schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Validate JSON data schema
+        run: |
+          if [ -f "DataSchema.json" ]; then
+            echo "🔍 Checking JSON schema formatting..."
+            python3 -m json.tool DataSchema.json > /dev/null && echo "✅ JSON schema format is valid"
+          elif [ -f "DataSchema.sql" ]; then
+            echo "🔍 Checking SQL schema formatting..."
+            grep -E "CREATE|TABLE|INSERT|PRIMARY KEY|FOREIGN KEY" DataSchema.sql && echo "✅ SQL schema contains required statements"
+          else
+            echo "⚠️ No DataSchema file found (expected DataSchema.json or DataSchema.sql)"
+            exit 1
+          fi

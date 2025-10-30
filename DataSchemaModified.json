@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Air Quality Monitoring for Sculptors"
+  "description": "JSON Schema з помилками (для перевірки невідповідності нормам кодування)",
+  "type": "object",
+  "properties": {
+    "sculptor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "strng",
+          "description": "Повне ім’я скульптора",
+          "minLength": "2"
+        },
+        "email": {
+          "type": "string"
+        },
+        "access_level": {
+          "type": "string",
+          "enum": ["basic", "premium", "vip"]
+        },
+        "aqmesh": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string"
+            },
+            "pollution_level": {
+              "type": "text"
+            },
+            "temperature": {
+              "type": "num"
+            }
+          }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "learning_materials": {
+          "type": "object"
+        }
+      },
+      "required": ["name", "email", "access_level", "aqmesh", "recommendations"]
+    }
+  }
